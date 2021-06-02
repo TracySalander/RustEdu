@@ -279,3 +279,34 @@ For example:
 - 154 is *not* an Armstrong number, because: `154 != 1^3 + 5^3 + 4^3 = 1 + 125 + 64 = 190`
 
 Write some code to determine whether a number is an Armstrong number.
+
+```rust
+pub fn is_armstrong_number(num: u32) -> bool{
+    let size: u32 = num.to_string().len() as u32;
+    let mut result = 0;
+    let mut n = num;
+    while n > 0{
+        let temp = n % 10;
+        result += temp.pow(size);
+        n /= 10;
+    }
+    result == num
+}
+```
+
+# 10 Reverse String
+
+`str vs string` `strings` `iterators`
+
+Reverse a string
+
+For example: input: "cool" output: "looc"
+
+```rust
+pub fn reverse(input: &str) -> String{
+    input.chars().rev().collect::<String>()
+}
+```
+
+
+
