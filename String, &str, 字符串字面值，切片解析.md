@@ -26,7 +26,7 @@ String加长的方法：
 
 另一个方法是用push_str()
 
-"ok", "hello world"就是字面值
+"ok", "hello world"就是字面值（可以看做str, 然后&str其实是对其的引用）
 
-String和&str都不能直接进行切片，必须要加&
+String和&str都不能直接进行切片，必须要加&，因为切片其实是对原来的引用
 

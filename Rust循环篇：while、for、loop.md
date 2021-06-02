@@ -2,7 +2,7 @@
 
 while没啥特殊的，只不过rust没do-while
 
-rust的for没有三元语句，只有for i in a.iter() 或 for i in 0..5或 for i in 3.. 或 for i in 3..=n/2（这个可是太秀了。。。下面介绍可以用这个的例子）
+rust的for没有三元语句，只有for i in a.iter() 或 for i in 0..5或 for i in 3.. 或 for i in 3..=n/2（这个可是太秀了。。。下面介绍可以用这个的例子）for i in 0..5 等价于for i in 0..=4
 
 loop就是"while true", 为啥Rust没有while true是为了一致性。。。Rust说While conditon == true才是指定的。
 

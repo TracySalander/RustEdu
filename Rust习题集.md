@@ -154,3 +154,97 @@ pub fn difference(num: u32) -> u32{
 
 ```
 
+# 6 Sum Of Multiples
+
+## `borrowing` `math` `algorithms`
+
+Given a number, find the sum of all the unique multiples of particular numbers up to but not including that number.
+
+If we list all the natural numbers below 20 that are multiples of 3 or 5, we get 3, 5, 6, 9, 10, 12, 15, and 18.
+
+The sum of these multiples is 78.
+
+```rust
+pub fn sum_of_multiples(bound: u32, list: &[u32]) -> u32{
+    let mut all = 0;
+    for i in 1..bound{
+        for j in list{
+            if *j != 0 && i % j == 0{
+                all += i;
+                break;
+            }
+        }
+    }
+    all
+}
+```
+
+
+
+# 7 Grains
+
+`panic`
+
+Calculate the number of grains of wheat on a chessboard given that the number on each square doubles.
+
+There once was a wise servant who saved the life of a prince. The king promised to pay whatever the servant could dream up. Knowing that the king loved chess, the servant told the king he would like to have grains of wheat. One grain on the first square of a chess board, with the number of grains doubling on each successive square.
+
+There are 64 squares on a chessboard (where square 1 has one grain, square 2 has two grains, and so on).
+
+Write code that shows:
+
+- how many grains were on a given square, and
+- the total number of grains on the chessboard
+
+```rust
+pub fn square(num: u32) -> u64{
+    if num <= 0 || num > 64{
+        panic!("Square must be between 1 and 64")
+    }
+    if num == 1{
+        return 1;
+    }
+    2 * square(num-1)
+}
+
+pub fn total() -> u64{
+    let mut all = 0;
+    for i in 1..65{
+        all += square(i);
+    }
+    all
+}
+```
+
+# 8 Prime Factors
+
+## `math`
+
+Compute the prime factors of a given natural number.
+
+A prime number is only evenly divisible by itself and 1.
+
+Note that 1 is not a prime number.
+
+## Example
+
+What are the prime factors of 60?
+
+- Our first divisor is 2. 2 goes into 60, leaving 30.
+- 2 goes into 30, leaving 15.
+  - 2 doesn't go cleanly into 15. So let's move on to our next divisor, 3.
+- 3 goes cleanly into 15, leaving 5.
+  - 3 does not go cleanly into 5. The next possible factor is 4.
+  - 4 does not go cleanly into 5. The next possible factor is 5.
+- 5 does go cleanly into 5.
+- We're left only with 1, so now, we're done.
+
+Our successful divisors in that computation represent the list of prime factors of 60: 2, 2, 3, and 5.
+
+You can check this yourself:
+
+- 2 * 2 * 3 * 5
+- = 4 * 15
+- = 60
+- Success!
+
