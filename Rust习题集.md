@@ -1,12 +1,6 @@
-
-
 <https://exercism.io/tracks/rust/exercises>
 
 [TOC]
-
-
-
-
 
 # 1. Hello World
 
@@ -19,11 +13,6 @@ The classical introductory exercies. Just say "Hello, World!"
 ```rust
 pub fn hello() -> &'static str {
     "Hello, World!"
-}
-
-#[test]
-fn test_hello_world() {
-    assert_eq!("Hello, World!", hello());
 }
 ```
 
@@ -55,90 +44,6 @@ fn is_leap_year(year: u64) -> bool{
 
 fn process_leapyear_case(year: u64, expected: bool) {
     assert_eq!(is_leap_year(year), expected);
-}
-
-#[test]
-fn test_year_not_divisible_by_4_common_year() {
-    process_leapyear_case(2015, false);
-}
-
-#[test]
-fn test_year_divisible_by_2_not_divisible_by_4_in_common_year() {
-    process_leapyear_case(1970, false);
-}
-
-#[test]
-fn test_year_divisible_by_4_not_divisible_by_100_leap_year() {
-    process_leapyear_case(1996, true);
-}
-
-#[test]
-fn test_year_divisible_by_4_and_5_is_still_a_leap_year() {
-    process_leapyear_case(1960, true);
-}
-
-#[test]
-fn test_year_divisible_by_100_not_divisible_by_400_common_year() {
-    process_leapyear_case(2100, false);
-}
-
-#[test]
-fn test_year_divisible_by_100_but_not_by_3_is_still_not_a_leap_year() {
-    process_leapyear_case(1900, false);
-}
-
-#[test]
-fn test_year_divisible_by_400_leap_year() {
-    process_leapyear_case(2000, true);
-}
-
-#[test]
-fn test_year_divisible_by_400_but_not_by_125_is_still_a_leap_year() {
-    process_leapyear_case(2400, true);
-}
-
-#[test]
-fn test_year_divisible_by_200_not_divisible_by_400_common_year() {
-    process_leapyear_case(1800, false);
-}
-
-#[test]
-fn test_any_old_year() {
-    process_leapyear_case(1997, false);
-}
-
-#[test]
-fn test_early_years() {
-    process_leapyear_case(1, false);
-    process_leapyear_case(4, true);
-    process_leapyear_case(100, false);
-    process_leapyear_case(400, true);
-    process_leapyear_case(900, false);
-}
-
-#[test]
-fn test_century() {
-    process_leapyear_case(1700, false);
-    process_leapyear_case(1800, false);
-    process_leapyear_case(1900, false);
-}
-
-#[test]
-fn test_exceptional_centuries() {
-    process_leapyear_case(1600, true);
-    process_leapyear_case(2000, true);
-    process_leapyear_case(2400, true);
-}
-
-#[test]
-fn test_years_1600_to_1699() {
-    let incorrect_years = (1600..1700)
-        .filter(|&year| is_leap_year(year) != (year % 4 == 0))
-        .collect::<Vec<_>>();
-
-    if !incorrect_years.is_empty() {
-        panic!("incorrect result for years: {:?}", incorrect_years);
-    }
 }
 ```
 
@@ -184,100 +89,68 @@ pub fn raindrops(num: u32) -> String{
     }
     result
 }
+```
 
-#[test]
-fn test_1() {
-    assert_eq!("1", raindrops(1));
+# 4 Proverb
+
+## `format`
+
+For want of a horseshoe nail, a kingdom was lost, or so the saying goes.
+
+Given a list of inputs, generate the relevant proverb. For example, given the list `["nail", "shoe", "horse", "rider", "message", "battle", "kingdom"]`, you will output the full text of this proverbial rhyme:
+
+```text
+For want of a nail the shoe was lost.
+For want of a shoe the horse was lost.
+For want of a horse the rider was lost.
+For want of a rider the message was lost.
+For want of a message the battle was lost.
+For want of a battle the kingdom was lost.
+And all for the want of a nail.
+```
+
+Note that the list of inputs may vary; your solution should be able to handle lists of arbitrary length and content. No line of the output text should be a static, unchanging string; all should vary according to the input given.
+
+```rust
+pub fn build_proverb(list: &[&str]) -> String{
+    let mut s = String::new();
+    if list.is_empty(){
+        return s
+    }
+    for i in 1..list.len(){
+        s.push_str(&format!("For want of a {} the {} was lost.\n", list[i-1], list[i]))
+    }
+    s.push_str(&format!("And all for the want of a {}.", list[0]));
+    s
+}
+```
+
+# 5 Difference Of Squares
+
+## `fold` `map` `math`
+
+Find the difference between the square of the sum and the sum of the squares of the first N natural numbers.
+
+```rust
+pub fn square_of_sum(num: u32)->u32{
+    let mut all = num;
+    for i in 0..num{
+        all = all + i;
+    }
+    all * all
 }
 
-#[test]
-fn test_3() {
-    assert_eq!("Pling", raindrops(3));
+pub fn sum_of_squares(num: u32)->u32{
+    let mut all = num * num;
+    for i in 0..num{
+        all = all + i * i;
+    }
+    all
 }
 
-#[test]
-fn test_5() {
-    assert_eq!("Plang", raindrops(5));
+pub fn difference(num: u32) -> u32{
+    square_of_sum(num) - sum_of_squares(num)
 }
 
-#[test]
-fn test_7() {
-    assert_eq!("Plong", raindrops(7));
-}
-
-#[test]
-fn test_6() {
-    assert_eq!("Pling", raindrops(6));
-}
-
-#[test]
-fn test_8() {
-    assert_eq!("8", raindrops(8));
-}
-
-#[test]
-fn test_9() {
-    assert_eq!("Pling", raindrops(9));
-}
-
-#[test]
-fn test_10() {
-    assert_eq!("Plang", raindrops(10));
-}
-
-#[test]
-fn test_14() {
-    assert_eq!("Plong", raindrops(14));
-}
-
-#[test]
-fn test_15() {
-    assert_eq!("PlingPlang", raindrops(15));
-}
-
-#[test]
-fn test_21() {
-    assert_eq!("PlingPlong", raindrops(21));
-}
-
-#[test]
-fn test_25() {
-    assert_eq!("Plang", raindrops(25));
-}
-
-#[test]
-fn test_27() {
-    assert_eq!("Pling", raindrops(27));
-}
-
-#[test]
-fn test_35() {
-    assert_eq!("PlangPlong", raindrops(35));
-}
-
-#[test]
-fn test_49() {
-    assert_eq!("Plong", raindrops(49));
-}
-
-#[test]
-fn test_52() {
-    assert_eq!("52", raindrops(52));
-}
-
-#[test]
-fn test_105() {
-    assert_eq!("PlingPlangPlong", raindrops(105));
-}
-
-#[test]
-fn test_3125() {
-    assert_eq!("Plang", raindrops(3125));
-}
-
-#[test]
-fn test_12121() {
-    assert_eq!("12121", raindrops(12_121));
-}
 ```
 
