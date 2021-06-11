@@ -151,5 +151,57 @@ fn main(){
 }
 ```
 
+## 4 认识所有权
+
+__对于数据内容放在Stack上的，就看成深拷贝，官方不考虑这里的深浅问题，统一叫Copy__
+
+```rust
+fn main(){
+    let mut a = 3;
+    let b = a;
+    a = 2;
+    println!("{}, {}", a, b);
+}
+```
+
+__对于数据内容存在Heap上的，=赋值就相当于move，Rust里没有浅拷贝，因为安全，防止出了作用域drop多次，只要赋值了，前一个就死了。要想达到深拷贝需要用clone()方法。__
 
 
+
+__普通类型直接传入函数之后还能用copy，复杂类型就不行了move， 但是如果对于复杂类型，我们只想用值但是不给所有权，那就用引用，引用相当于在Stack中创建了一个变量指向同在Stack中的另一个指向Heap的变量。就算新创建这个死了也不影响剩下的所有东西，引用作为函数参数的术语叫借用borrowing(有借有还)， 但是如果这两个Stack变量都加了mut那就可以通过引用改变Heap中的原始数据__
+
+为了解决需要用一部分String时候，如果String变了，对新变量不产生影响的问题，Rust用slice解决，实际上是指针指向String指向的Heap空间的部分内容。之前的引用是指向Stack上的变量名，这里是直接指向Heap。字符串slice是个特殊的类型，写作&str。let s = "Hello, world!"是字符串字面量，但本质就是&str。当声明函数参数类型时候用&str可以传入&str和&String，但是如果声明的是&String则只能传入&String不能传入&str，所以有经验的大佬都写&str
+
+```rust
+fn main() {
+    let my_string = String::from("hello world");
+
+    // first_word 中传入 `String` 的 slice
+    let word = first_word(&my_string[..]);
+
+    let my_string_literal = "hello world";
+
+    // first_word 中传入字符串字面值的 slice
+    let word = first_word(&my_string_literal[..]);
+
+    // 因为字符串字面值 **就是** 字符串 slice，
+    // 这样写也可以，即不使用 slice 语法！
+    let word = first_word(my_string_literal);
+}
+```
+
+## 5 使用结构体来组织相关联的数据
+
+struct里有一种特殊的，叫tuple structs，元组结构体，其实就是结构体只不过没有字段名。一般就是用来区分类型的：例子
+
+```rust
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+let black = Color(0, 0, 0);
+let origin = Point(0, 0, 0);
+```
+
+Struct定义如果有引用类型必须指明生命周期
+
+打印Struct内容可以用{:?}或{:#?}但是需要引入#[derive(debug)]这个trait
