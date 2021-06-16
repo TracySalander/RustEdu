@@ -205,3 +205,159 @@ let origin = Point(0, 0, 0);
 Struct定义如果有引用类型必须指明生命周期
 
 打印Struct内容可以用{:?}或{:#?}但是需要引入#[derive(debug)]这个trait
+
+## 6 枚举与模式匹配
+
+枚举的用处在于可以轻易的定义一个能够处理这些不同类型的结构体的函数，因为枚举是单独一个类型。结构体和枚举还有另一个相似点：就像可以使用 `impl` 来为结构体定义方法那样，也可以在枚举上定义方法。
+
+match是用来处理枚举的。match可以用多个if let, else代替但是我觉得还是match比较好。就像用switch能弄的用ifelse弄挺变扭的。
+
+## 7 使用包、Crate和模块管理不断增长的项目
+
+Rust 中默认所有项（函数、方法、结构体、枚举、模块和常量）都是私有的。父模块中的项不能使用子模块中的私有项，但是子模块中的项可以使用他们父模块中的项。这是因为子模块封装并隐藏了他们的实现详情，但是子模块可以看到他们定义的上下文。继续拿餐馆作比喻，把私有性规则想象成餐馆的后台办公室：餐馆内的事务对餐厅顾客来说是不可知的，但办公室经理可以洞悉其经营的餐厅并在其中做任何事情。
+
+Rust 选择以这种方式来实现模块系统功能，因此默认隐藏内部实现细节。这样一来，你就知道可以更改内部代码的哪些部分而不会破坏外部代码。你还可以通过使用 `pub` 关键字来创建公共项，使子模块的内部部分暴露给上级模块。
+
+## 8 常见集合
+
+`format!` 与 `println!` 的工作原理相同，不过不同于将输出打印到屏幕上，它返回一个带有结果内容的 `String`。
+
+个构建哈希 map 的方法是使用一个元组的 vector 的 `collect` 方法，其中每个元组包含一个键值对。`collect` 方法可以将数据收集进一系列的集合类型，包括 `HashMap`。例如，如果队伍的名字和初始分数分别在两个 vector 中，可以使用 `zip` 方法来创建一个元组的 vector，其中 “Blue” 与 10 是一对，依此类推。接着就可以使用 `collect` 方法将这个元组 vector 转换成一个 `HashMap`
+
+```rust
+use std::collections::HashMap;
+
+let teams  = vec![String::from("Blue"), String::from("Yellow")];
+let initial_scores = vec![10, 50];
+
+let scores: HashMap<_, _> = teams.iter().zip(initial_scores.iter()).collect();
+```
+
+#### [只在键没有对应值时插入](https://kaisery.github.io/trpl-zh-cn/ch08-03-hash-maps.html#只在键没有对应值时插入)
+
+我们经常会检查某个特定的键是否有值，如果没有就插入一个值。为此哈希 map 有一个特有的 API，叫做 `entry`，它获取我们想要检查的键作为参数。`entry` 函数的返回值是一个枚举，`Entry`，它代表了可能存在也可能不存在的值。比如说我们想要检查黄队的键是否关联了一个值。如果没有，就插入值 50，对于蓝队也是如此。
+
+```rust
+use std::collections::HashMap;
+
+let mut scores = HashMap::new();
+scores.insert(String::from("Blue"), 10);
+
+scores.entry(String::from("Yellow")).or_insert(50);
+scores.entry(String::from("Blue")).or_insert(50);
+
+println!("{:?}", scores);
+```
+
+### 第八章课后练习题
+
+- 给定一系列数字，使用 vector 并返回这个列表的平均数（mean, average）、中位数（排列数组后位于中间的值）和众数（mode，出现次数最多的值；这里哈希函数会很有帮助）。
+
+```rust
+use std::collections::HashMap;
+pub fn find_numbers(input: &mut Vec<i32>)-> Vec<i32>{
+    let mut result = Vec::new();
+    let mut mean: i32 = 0;
+    let mut mid: i32 = 0;
+    let mut mode: i32 = 0;
+    input.sort();
+    mid = input[input.len()/2];
+    let input2 = input.clone();
+    for i in &input2{
+        mean += *i;
+    }
+    mean = mean / (input.len() as i32);
+    let mut store_hash = HashMap::new();
+    for i in &input2{
+        let count = store_hash.entry(i).or_insert(0);
+        *count += 1;
+    }
+    for (_key, value) in &store_hash{
+        if value > &mode{
+            mode = *value;
+        }
+    }
+    result.push(mean);
+    result.push(mid);
+    result.push(mode);
+    result
+}
+fn main(){
+    let mut input: Vec<i32> = vec![1, 2, 3, 4, 5, 1];
+    println!("{:?}", find_numbers(&mut input));
+}
+```
+
+
+
+- 将字符串转换为 Pig Latin，也就是每一个单词的第一个辅音字母被移动到单词的结尾并增加 “ay”，所以 “first” 会变成 “irst-fay”。元音字母开头的单词则在结尾增加 “hay”（“apple” 会变成 “apple-hay”）。牢记 UTF-8 编码！
+
+```rust
+pub fn pig_latin(input: &String)->String{
+    let vow = ["a", "e", "i", "o", "u"];
+    let head = &input[..1];
+    let rest = &input[1..];
+
+    match vow.contains(&head){
+        true => format!("{}-{}", input, "hay"),
+        false => format!("{}-{}{}", rest, head, "ay"),
+    }
+}
+fn main(){
+    println!("{}", pig_latin(&String::from("first")));
+    println!("{}", pig_latin(&String::from("apple")));
+}
+```
+
+
+
+### 第十章
+
+`impl Trait` 很方便，适用于短小的例子。trait bound 则适用于更复杂的场景。例如，可以获取两个实现了 `Summary` 的参数。使用 `impl Trait` 的语法看起来像这样：
+
+```rust
+pub fn notify(item1: impl Summary, item2: impl Summary) {
+```
+
+这适用于 `item1` 和 `item2` 允许是不同类型的情况（只要它们都实现了 `Summary`）。不过如果你希望强制它们都是相同类型呢？这只有在使用 trait bound 时才有可能：
+
+```rust
+pub fn notify<T: Summary>(item1: T, item2: T) {
+```
+
+泛型 `T` 被指定为 `item1` 和 `item2` 的参数限制，如此传递给参数 `item1` 和 `item2` 值的具体类型必须一致。
+
+#### [通过 `+` 指定多个 trait bound](https://kaisery.github.io/trpl-zh-cn/ch10-02-traits.html#通过--指定多个-trait-bound)
+
+如果 `notify` 需要显示 `item` 的格式化形式，同时也要使用 `summarize` 方法，那么 `item` 就需要同时实现两个不同的 trait：`Display` 和 `Summary`。这可以通过 `+` 语法实现：
+
+```rust
+pub fn notify(item: impl Summary + Display) {
+```
+
+`+` 语法也适用于泛型的 trait bound：
+
+```rust
+pub fn notify<T: Summary + Display>(item: T) {
+```
+
+通过指定这两个 trait bound，`notify` 的函数体可以调用 `summarize` 并使用 `{}` 来格式化 `item`。
+
+#### [通过 `where` 简化 trait bound](https://kaisery.github.io/trpl-zh-cn/ch10-02-traits.html#通过-where-简化-trait-bound)
+
+然而，使用过多的 trait bound 也有缺点。每个泛型有其自己的 trait bound，所以有多个泛型参数的函数在名称和参数列表之间会有很长的 trait bound 信息，这使得函数签名难以阅读。为此，Rust 有另一个在函数签名之后的 `where` 从句中指定 trait bound 的语法。所以除了这么写：
+
+```rust
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: T, u: U) -> i32 {
+```
+
+还可以像这样使用 `where` 从句：
+
+```rust
+fn some_function<T, U>(t: T, u: U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{
+```
+
+这个函数签名就显得不那么杂乱，函数名、参数列表和返回值类型都离得很近，看起来类似没有很多 trait bounds 的函数。

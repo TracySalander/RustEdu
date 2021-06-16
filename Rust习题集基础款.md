@@ -324,3 +324,117 @@ pub fn after(start: DateTime<Utc>) -> DateTime<Utc>{
 }
 ```
 
+# 12 Matching Brackets
+
+Given a string containing brackets `[]`, braces `{}`, parentheses `()`, or any combination thereof, verify that any and all pairs are matched and nested correctly.
+
+```rust
+pub fn brackets_are_balanced(input: &str) -> bool{
+    
+    let mut store: Vec<char> = Vec::new();
+
+    for c in input.chars(){
+        match c {
+            '(' || '{' || '[' => store.push(c),
+            ')' => {
+                if store.pop() != Some('(') {
+                    return false;
+                }
+            }
+            '}' => {
+                if store.pop() != Some('{'){
+                    return false;
+                }
+            }
+            ']' => {
+                if store.pop() != Some('['){
+                    return false;
+                }
+            }
+            _ => ()
+        }
+    }
+    store.is_empty()
+}
+```
+
+# 13 Bob
+
+Bob is a lackadaisical teenager. In conversation, his responses are very limited.
+
+Bob answers 'Sure.' if you ask him a question, such as "How are you?".
+
+He answers 'Whoa, chill out!' if you YELL AT HIM (in all capitals).
+
+He answers 'Calm down, I know what I'm doing!' if you yell a question at him.
+
+He says 'Fine. Be that way!' if you address him without actually saying anything.
+
+He answers 'Whatever.' to anything else.
+
+Bob's conversational partner is a purist when it comes to written communication and always follows normal rules regarding sentence punctuation in English.
+
+```rust
+pub fn reply(message: &str)->&str{
+    let is_silent = message.trim().is_empty();
+    let is_question = message.trim().ends_with("?");
+    let has_alphabetic_chars = message.trim().chars().find(|x| x.is_alphabetic()).is_some();
+    let is_uppercase = message.to_uppercase()  == message;
+    let is_yelling = has_alphabetic_chars && is_uppercase;
+    match (is_silent, is_question, is_yelling) {
+        (false, true, true) => "Calm down, I know what I'm doing!",
+        (false, false, true) => "Whoa, chill out!",
+        (false, true, false) => "Sure.",
+        (true, _, _) => "Fine. Be that way!",
+        (_, _, _) => "Whatever.",
+    }
+}
+```
+
+# 14 High Scores
+
+Manage a game player's High Score list.
+
+Your task is to build a high-score component of the classic Frogger game, one of the highest selling and addictive games of all time, and a classic of the arcade era. Your task is to write methods that return the highest score from the list, the last added score and the three highest scores.
+
+Hints
+
+Consider retaining a reference to `scores` in the struct - copying is not necessary. You will require some lifetime annotations, though.
+
+```rust
+use std::cmp;
+pub struct HighScores{
+    list_scores:Vec<u32>,
+}
+
+impl HighScores{
+    pub fn new(scores: &[u32])-> Self{
+        let all = scores.to_vec();
+        HighScores{list_scores:all}
+    }
+
+    pub fn scores(&self)-> &[u32]{
+        self.list_scores.as_slice()
+    }
+
+    pub fn latest(&self) -> Option<u32>{
+        let mut temp = self.list_scores.clone();
+        temp.pop()
+    }
+
+    pub fn personal_best(&self)-> Option<u32>{
+        let mut temp = self.list_scores.clone();
+        temp.sort();
+        temp.pop()
+    }
+
+    pub fn personal_top_three(&self) -> Vec<u32>{
+        let mut temp = self.list_scores.clone();
+        temp.sort();
+        temp.reverse();
+        
+        temp[0..cmp::min(self.list_scores.len(), 3)].to_vec()
+    }
+}
+```
+
