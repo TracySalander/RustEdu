@@ -156,3 +156,53 @@ pub fn find<T: Ord, V: AsRef<[T]>>(input: V, key: T)->Option<usize>{
 }
 ```
 
+
+
+# Pascal's Triangle
+
+Compute Pascal's triangle up to a given number of rows.
+
+In Pascal's Triangle each number is computed by adding the numbers to the right and left of the current position in the previous row.
+
+```text
+    1
+   1 1
+  1 2 1
+ 1 3 3 1
+1 4 6 4 1
+# ... etc
+```
+
+```rust
+pub struct PascalsTriangle{
+    row_number: u32,
+}
+
+impl PascalsTriangle{
+    pub fn new(root: u32)->Self{
+        PascalsTriangle{ row_number: root }
+    }
+
+    pub fn rows(&self) -> Vec<Vec<u32>>{
+        let mut result: Vec<Vec<u32>> = Vec::new();
+        if self.row_number == 0{ return result;}
+        else {
+            result.push(vec![1]);
+        }
+        for i in 1..self.row_number as usize{
+            let mut row = vec![];
+            let prev_row = result.last().unwrap();
+            for j in 0..=i{
+                if j > 0 && j < prev_row.len(){
+                    row.push(prev_row[j-1] + prev_row[j]);
+                } else{
+                    row.push(1);
+                }
+            }
+            result.push(row);
+        }
+        result
+    }
+}
+```
+
