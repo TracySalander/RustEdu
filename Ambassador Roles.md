@@ -1,96 +1,133 @@
-# Ambassador Roles:
+# Oversea Ambassador (outside of China) Roles:
 
-There will have 3 levels ambassador:
 
-Ambassador Levels:
 
-Level1 can do 1 of the following
+## There will have 3 levels ambassador:
 
-Level2 can do 2 of the following
+### Ambassador Levels:
 
-Level3 can do 3 of the following
+* __Level1 can do 1 of the following__
 
-Every 2 months, ambassador can be promoted to next level automatically.
+* __Level2 can do 2 of the following__
 
-For content creator, meetup organizer and translator, they have to hold 1 event or translate or create 1 article per month for they will be downgrade to the lower level. If the moderator can not fully cover at least one channer per month, it will be downgrade too. Worst case is that the person will lose it's ambassador position.
+* __Level3 can do 3 of the following__
+
+__Every 2 months, ambassador can be promoted to next level automatically.__
+
+__For content creator, meetup organizer and translator, they have to hold 1 event or translate or create 1 article per month for they will be downgrade to the lower level. If the moderator can not fully cover at least one channer per month, it will be downgrade too. Worst case is that the person will lose it's ambassador position.__
+
+
 
 ## Content creator:
 
-Content Creators drive adoption by educating the community and the wider public about the project through engaging, informative and insightful content in the form of videos, blogs, graphic designs, podcasts, or any other form of artistic production.
+
+
+### Content creators promote interest in the project by educating the community and the general public about the project through engaging, informative, and meaningful content in the form of videos, blogs, graphic design, podcasts, or any other form of artistic creation.
+
+
 
 ### Qualification：
 
-provide at least three previously published pieces of content.
+* __Provide at least three previously published pieces of content;__
 
-Asset：Graphical, text, articles, blogs, audio and/or video content are all acceptable, as well as tools (apps, websites, etc.);
+* __Asset：Graphical, text, articles, blogs, audio and/or video content are all acceptable, as well as tools (apps, websites, etc.);__
 
-Content informs our community about technical or social aspects of the project;
+* __Content informs our community about technical or social aspects of the project;__
 
-Content is up to date, well presented; video and audio are of high quality in resolution, editing and production value efforts; graphic design work shows proficiency in execution;
+* __Text is flawless and grammatically correct;__
 
-Text is flawless and grammatically correct;
+* __Content represents the values of the Octopus Network brand;__
 
-Content represents the values of the Octopus Network brand;
+* __Audiovisual production excels in quality and delivery;__
+* __Content is up to date, well presented; video and audio are of high quality in resolution, editing and production value efforts; graphic design work shows proficiency in execution;__
 
-Audiovisual production excels in quality and delivery;
+
 
 ### Rewards:
 
-Because different kinds of content require different efforts for production and publication, the following three content tiers will be rewarded on a monthly basis:
+__Because different kinds of content require different efforts for production and publication, the following three content tiers will be rewarded on a monthly basis:__
 
-**level 1** US$10 per piece (maximum ten pieces)
+* __**level 1** rewords by piece (maximum ten pieces)__
 
-**level 2** US$20 per piece (maximum eight pieces)
+* __**level 2** rewords by piece (maximum eight pieces)__
 
-**level 3** US$50 per piece (maximum six pieces)
+* __**level 3** rewords by piece (maximum six pieces)__
 
-**Monthly cap US$ 300**
 
-## Meetup organizer
 
-Meetup Organizers drive adoption by hosting regular offline Octopus Network meetups, connect with local blockchain enthusiasts to educate them about Octopus Network, create think-tanks and have open debates. Ambassadors can apply for rewards from their third meetup on. A meetup needs to be hosted at least once every three months to maintain the Ambassador status.
+## Meetup organizer:
+
+
+
+### Meetup Organizers drive adoption by hosting regular offline Octopus Network meetups, connect with local blockchain enthusiasts to educate them about Octopus Network, create think-tanks and have open debates. Ambassadors can apply for rewards from their third meetup. A meetup needs to be hosted at least once every three months to maintain the Ambassador status.
+
+
 
 ### Qualification:
 
-Anyone who is interested in hosting meetup events; no specific event management background required.
+* __Anyone who is interested in hosting meetup events; no specific event management background required;__
 
-You have hosted at least two Octopus community meetups subject to the Octopus Community Meetup Guidelines with a minimum of 10 attendees each in the three months prior to the application;
+* __You have hosted at least two Octopus community meetups with a minimum of 10 attendees each in the three months prior to the application;__
 
- You should provide valid URL links of your meetup group with proof of previous hosted events.
+* __You should provide valid URL links of your meetup group with proof of previous hosted events;__
+
+
 
 ### Rewards:
 
-Baseline reward*US$20 for organizing a meetupUS$20 for a written recap on the Octopus Network ForumUS$20 for basic video recording of event and interviews
+* __Rewards by organizing a meetup__
 
-Additional reward: US$1 per participant (group photo) and cap of US$100 per meetup
+* __Rewards by writting recap__
 
-**Monthly cap US$ 300**
+* __Rewards by basic video recording of event and interviews__
+
+* __Additional reward: rewards by per participant (group photo)__
+
+
 
 ## Moderator
 
-Moderators drive adoption by keeping our official online social media channels informative, productive and a pleasant place for the community to come together in multiple languages across various platforms.
+
+
+### Moderators drive adoption by helping us maintain under the direction of social media community manager though  our official online social media channels. We would like you to help us create an informative, productive and pleasant place for the community members to come together in multiple languages across various platforms.
+
+
 
 ### Qualification: 
 
-A well-known community member who is actively engaged in one or more of our social media channels and being recognized as a contributor to a positive, friendly and welcoming atmosphere;
+* __A well-known community member who is actively engaged in one or more of our social media channels and being recognized as a contributor to a positive, friendly and welcoming atmosphere;__
 
-Deep understanding of how a particular social media platform works and participation in daily activities;
+* __Deep understanding of how a particular social media platform works and participation in daily activities;__
 
-Our current moderators for a particular channel agree that the applicant is a suitable candidate.
+
 
 ### Rewards:
 
-US$100 for full coverage of one major social channel*Activities*Moderate channels, such as Facebook, Weibo, Reddit, Telegram and language-specific mediums.
+__Rewords for full coverage of one major social channel*Activities*Moderate channels, such as Facebook, Weibo, Reddit, Telegram and language-specific mediums.__
 
-**Monthly cap US$ 300**
+
 
 ## Translator
 
-Translators drive adoption by expanding the Octopus Network project to non-English speaking communities by translating and sharing content in different languages.
+__Translators drive adoption by expanding the Octopus Network project to non-Chinese speaking communities by translating and sharing content in different languages.__
 
-### Requirement:
 
-Send at least 1000 words translation articleShare on different platform
-**US$ 0.02 per word**
 
-**Monthly cap of US$300**
+### Qulification:
+
+__Send at least 1000 words translation article and share on different platforms.__
+
+### Rewards:
+
+__Rewords by the number of acurate orginal text words.__
+
+
+
+
+
+## The oversea (outside of China) ambassador candidacy registration form is following below:
+
+
+
+<https://docs.google.com/forms/d/1wCXuVNfrH9Y4e3oO2DGXLpm5XS39CEt8pDiYNhMLE7c/edit>
+
