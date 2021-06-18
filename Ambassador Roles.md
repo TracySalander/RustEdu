@@ -103,7 +103,7 @@ __Because different kinds of content require different efforts for production an
 
 ### Rewards:
 
-__Rewords for full coverage of one major social channel*Activities*Moderate channels, such as Facebook, Weibo, Reddit, Telegram and language-specific mediums.__
+__Rewords for full coverage of one major social channel, such as Facebook, Weibo, Reddit, Telegram and language-specific mediums.__
 
 
 
@@ -125,7 +125,7 @@ __Rewords by the number of acurate orginal text words.__
 
 
 
-## The oversea (outside of China) ambassador candidacy registration form is following below:
+## The oversea (outside of China) ambassador candidacy registration form is in the following below:
 
 
 
