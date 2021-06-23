@@ -1,20 +1,4 @@
-# Oversea Ambassador (outside of China) Roles:
-
-
-
-## There will have 3 levels ambassador:
-
-### Ambassador Levels:
-
-* __Level1 can do 1 of the following__
-
-* __Level2 can do 2 of the following__
-
-* __Level3 can do 3 of the following__
-
-__Every 2 months, ambassador can be promoted to next level automatically.__
-
-__For content creator, meetup organizer and translator, they have to hold 1 event or translate or create 1 article per month for they will be downgrade to the lower level. If the moderator can not fully cover at least one channer per month, it will be downgrade too. Worst case is that the person will lose it's ambassador position.__
+# Octopus Ambassador Roles:
 
 
 
@@ -47,11 +31,11 @@ __For content creator, meetup organizer and translator, they have to hold 1 even
 
 __Because different kinds of content require different efforts for production and publication, the following three content tiers will be rewarded on a monthly basis:__
 
-* __**level 1** rewords by piece (maximum ten pieces)__
+* __**level 1** rewards by piece (maximum ten pieces)__
 
-* __**level 2** rewords by piece (maximum eight pieces)__
+* __**level 2** rewards by piece (maximum eight pieces)__
 
-* __**level 3** rewords by piece (maximum six pieces)__
+* __**level 3** rewards by piece (maximum six pieces)__
 
 
 
@@ -77,7 +61,7 @@ __Because different kinds of content require different efforts for production an
 
 * __Rewards by organizing a meetup__
 
-* __Rewards by writting recap__
+* __Rewards by writing recap__
 
 * __Rewards by basic video recording of event and interviews__
 
@@ -103,7 +87,7 @@ __Because different kinds of content require different efforts for production an
 
 ### Rewards:
 
-__Rewords for full coverage of one major social channel, such as Facebook, Weibo, Reddit, Telegram and language-specific mediums.__
+__Rewards for full coverage of one major social channel, such as Facebook, Weibo, Reddit, Telegram and language-specific mediums.__
 
 
 
@@ -113,19 +97,19 @@ __Translators drive adoption by expanding the Octopus Network project to non-Chi
 
 
 
-### Qulification:
+### Qualification:
 
 __Send at least 1000 words translation article and share on different platforms.__
 
 ### Rewards:
 
-__Rewords by the number of acurate orginal text words.__
+__Rewards by the number of accurate original text words.__
 
 
 
 
 
-## The oversea (outside of China) ambassador candidacy registration form is in the following below:
+## The ambassador candidacy registration form is in the following link below:
 
 
 
