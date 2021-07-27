@@ -1,0 +1,50 @@
+fn main(){
+    let light = TrafficLight::Yellow;
+    println!("light is: {}", light.calculate_time());
+    println!("sum is {:?}", sum_u32(&[u32::MAX, 1]));
+
+}
+
+
+// Q1
+enum TrafficLight{
+    Red,
+    Green, 
+    Yellow,
+}
+pub trait CalTime{
+    fn calculate_time(&self) -> String;
+}
+
+impl CalTime for TrafficLight{
+    fn calculate_time(&self) -> String {
+        match self {
+            TrafficLight::Red => String::from("Red Time"),
+            TrafficLight::Green => String::from("Green Time"),
+            TrafficLight::Yellow => String::from("Yellow Time"),
+            _ => String::from("Default Time"),
+        }
+    }
+}
+
+// Q2
+fn sum_u32(input: &[u32]) -> Option<u32>{
+    let mut total:u32 = 0;
+    for i in input.iter(){
+        if total.checked_add(*i) == None {
+            return None
+        }
+        total = total + i;
+    }
+    Some(total)
+}
+
+
+// Q3
+pub trait Area {
+    fn area(&self);
+}
+
+fn area_print<T: Area>(shape: &T){
+    println!("The area is {:?}", shape.area());
+}
