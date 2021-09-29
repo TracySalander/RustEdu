@@ -11,14 +11,37 @@ if a > 0 {
 } else {
     println!("a is zero");
 }
+```
+#### 模式匹配
+Pattern match可以方便地实现条件分支管理
+if else的加强版:
+* 适用于几乎所有的数据类型
+    * 基本类型u8, bool
+    * 复杂类型struct, enum, tuple...
+* 匹配必须完备
+* (下划线)可以匹配所有的值
 
+```rust
 match a {
     0 => println!("a is zero"),
     1..=i32::MAX => println!("a is possible"),
     _ => println!("a is negative"),
 }
 ```
+特例if let
+* 只关心一个分支时
+* 失去了完备性检查
+```rust
+let some_u8_value = Some(3u8);
+match some_u8_value{
+    Some(3) => println!("three");
+    _ => (),
+}
 
+if let Some(3) = some_u8_value{
+    println!("three");
+}
+```
 ### 循环
 ```rust
 loop {
