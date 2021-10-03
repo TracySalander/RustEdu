@@ -1,0 +1,64 @@
+## 简单映射类型
+StorageMap类型，用来保存键值对，单值类型都可以用作key或者value。
+```rust
+#[pallet::storage]
+#[pallet::getter(fn my_map)]
+pub type MyMap<T> = StorageMap<
+    _,
+    Blake2_128Concat, // 一个函数算法，对u8进行一个hash生成一个真正存储时候用到的key
+    u8,
+    Vec<u8>,
+>;
+```
+key的哈希算法：Blake2_128Concat（密码学安全）, Twox64Concat（速度快，密码学不安全）, Identity（当key已经是hash之后的时候用，避免一些不必要的计算）
+StorageMap类型，用来保存键值对，单值类型都可以用作key或者value。
+* 插入一个元素：MyMap::<T>::insert(key, value);
+* 通过key获取value: MyMap::<T>::get(key);
+* 删除某个key对应的元素: MyMap::remove(key);
+* 覆盖或者修改某个key对应的元素
+    * MyMap::insert(key, new_value);
+    * MyMap::insert(key, |old_value| old_value+1);
+    
+## 双键映射类型
+StorageDoubleMap类型，使用两个key来索引value，用于快速删除key1对应的任意记录，也可以遍历key1对应的所有记录，定义：
+```rust
+#[pallet::storage]
+#[pallet::getter(fn my_double_map)]
+pub type MyDoubleMap<T: Config> = StorageDoubleMap<
+    _,
+    Blake2_128Concat,
+    T::AccountId,
+    Blake2_128Concat,
+    u32,
+    Vec<u8>,
+>;
+```
+* 插入一个元素：MyDoubleMap::<T>::insert(key1, key2, value);
+* 获取某一元素：MyDoubleMap::<T>::get(key1, key2);
+* 删除某一元素：MyDoubleMap::<T>::remove(key1, key2);
+* 删除key1对应的所有元素:
+  MyDoubleMap::<T>::remove_prefix(key1);
+  
+  ## 存储的初始化
+  创世区块的数据初始化：
+  ```rust
+  #[pallet::genesis_config]
+  pub struct GenesisConfig{
+      pub value: u8,
+  }
+  
+  #[cfg(feature = "std")]
+  impl Default for GenesisConfig<T>{
+      fn default() -> Self {
+          Self {value: Default::default()}
+      }
+  }
+  
+  #[pallet::genesis_build]
+  impl<T: Config> GenesisBuild<T> for GenesisConfig<T>
+  {
+      fn build(&self){
+          MyValue::<T>::put(&self.value);
+      }
+  }
+  ```
