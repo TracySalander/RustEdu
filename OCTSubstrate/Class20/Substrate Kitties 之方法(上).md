@@ -91,6 +91,65 @@ pub enum Event<T: Config> {
 	KittyTransfered(T::AccountId, T::AccountId, KittyIndex)
 }
 ```
+
+```rust
+/// 生产 Kitty
+		/// 父母的编号不能相同
+		/// ### Arguments
+		/// * `origin` - 生产者
+		/// * `kitty_id_1` - 父亲的编号
+		/// * `kitty_id_2` - 母亲的编号
+		#[pallet::weight(0)]
+		pub fn breed(
+			origin: OriginFor<T>,
+			kitty_id_1: KittyIndex,
+			kitty_id_2: KittyIndex,
+		) -> DispatchResult {
+			let who = ensure_signed(origin)?;
+
+			ensure!(kitty_id_1 != kitty_id_2, Error::<T>::SameParentIndex);
+
+			let owner1 = Self::owner(kitty_id_1).ok_or(Error::<T>::InvalidKittyIndex)?;
+			let owner2 = Self::owner(kitty_id_2).ok_or(Error::<T>::InvalidKittyIndex)?;
+
+			ensure!(owner1 == who, Error::<T>::NotOwnerOfKitty);
+			ensure!(owner2 == who, Error::<T>::NotOwnerOfKitty);
+
+			let kitty1 = Self::kitties(kitty_id_1).ok_or(Error::<T>::InvalidKittyIndex)?;
+			let kitty2 = Self::kitties(kitty_id_2).ok_or(Error::<T>::InvalidKittyIndex)?;
+
+			let kitty_id = match Self::kitties_count() {
+				Some(id) => {
+					ensure!(id != KittyIndex::max_value(), Error::<T>::KittiesCountOverflow);
+					id
+				}
+				None => 1
+			};
+
+			let dna_1 = kitty1.0;
+			let dna_2 = kitty2.0;
+
+			let selector = Self::random_value(&who);
+			let mut new_dna = [0u8; 16];
+
+			// 按照父母生成新的DNA
+			for i in 0..dna_1.len() {
+				new_dna[i] = (selector[i] & dna_1[i]) | (!selector[i] & dna_2[i])
+			}
+
+			// 把这些数据都放到链上
+			Kitties::<T>::insert(kitty_id, Some(Kitty(new_dna)));
+			Owner::<T>::insert(kitty_id, Some(&who));
+			KittiesCount::<T>::put(kitty_id);
+
+			Self::deposit_event(Event::KittyCreated(who, kitty_id));
+
+			Ok(())
+		}
+```
+
+剩下runtime的lib.rs和Cargo.toml中有template的都复制改名为kitties
+
 下面就是今天全部内容
 ```rust
 #![cfg_attr(not(feature = "std"), no_std)]
@@ -156,72 +215,127 @@ pub mod pallet {
 		KittiesCountOverflow,
 		NotOwnerOfKitty,
 		SameOwner,
+		InvalidKittyIndex,
+		SameParentIndex
     }
     
     #[pallet::call]
     impl<T: Config> Pallet<T> {
-	/// 创建 Kitty
-	/// 创建时需要质押一定的金额: `T::ReserveOfNewCreate`
-	/// ### Arguments
-	/// * `origin` - 创建者
-	#[pallet::weight(0)]
-	pub fn create(origin: OriginFor<T>) -> DispatchResult {
-		let who = ensure_signed(origin)?;
+		/// 创建 Kitty
+		/// 创建时需要质押一定的金额: `T::ReserveOfNewCreate`
+		/// ### Arguments
+		/// * `origin` - 创建者
+		#[pallet::weight(0)]
+		pub fn create(origin: OriginFor<T>) -> DispatchResult {
+			let who = ensure_signed(origin)?;
 
-		let kitty_id = match Self::kitties_count() {
-			Some(id) => {
-				ensure!(id != KittyIndex::max_value(), Error::<T>::KittiesCountOverflow);
-				id
-			},
-			None => 1
-		};
-		let dna = Self::random_value(&who); //这个数据以后在前端可以做展示
-		// 数据准备好之后下面我们就把数据都放在区块链上去
-		Kitties::<T>::insert(kitty_id, Some(Kitty(dna)));
-		Owner::<T>::insert(kitty_id, Some(&who));
-		KittiesCount::<T>::put(kitty_id);
-		// 最后需要向前端抛出一个Event
-		Self::deposit_event(Event::KittyCreated(who, kitty_id));
+			let kitty_id = match Self::kitties_count() {
+				Some(id) => {
+					ensure!(id != KittyIndex::max_value(), Error::<T>::KittiesCountOverflow);
+					id
+				},
+				None => 1
+			};
+			let dna = Self::random_value(&who); //这个数据以后在前端可以做展示
+			// 数据准备好之后下面我们就把数据都放在区块链上去
+			Kitties::<T>::insert(kitty_id, Some(Kitty(dna)));
+			Owner::<T>::insert(kitty_id, Some(&who));
+			KittiesCount::<T>::put(kitty_id);
+			// 最后需要向前端抛出一个Event
+			Self::deposit_event(Event::KittyCreated(who, kitty_id));
 
-		Ok(())
-	}
+			Ok(())
+		}
 
-	/// 转让 Kitty
-	/// 转让者与接收者不能相同
-	/// ### Arguments
-	/// * `origin` - 转让者
-	/// * `to` - 接收者
-	/// * `kitty_id` - 转让的 Kitty 编号
-	#[pallet::weight(0)]
-	pub fn transfer(
-		origin: OriginFor<T>,
-		to: T::AccountId,
-		kitty_id: KittyIndex,
-	) -> DispatchResult {
-		let sender = ensure_signed(origin)?;
+		/// 转让 Kitty
+		/// 转让者与接收者不能相同
+		/// ### Arguments
+		/// * `origin` - 转让者
+		/// * `to` - 接收者
+		/// * `kitty_id` - 转让的 Kitty 编号
+		#[pallet::weight(0)]
+		pub fn transfer(
+			origin: OriginFor<T>,
+			to: T::AccountId,
+			kitty_id: KittyIndex,
+		) -> DispatchResult {
+			let sender = ensure_signed(origin)?;
 
-		ensure!(sender != to, Error::<T>::SameOwner);
+			ensure!(sender != to, Error::<T>::SameOwner);
 
-		let owner = Owner::<T>::get(&kitty_id).unwrap();
-		ensure!(owner == sender, Error::<T>::NotOwnerOfKitty);
+			let owner = Owner::<T>::get(&kitty_id).unwrap();
+			ensure!(owner == sender, Error::<T>::NotOwnerOfKitty);
 
-		Owner::<T>::insert(kitty_id, Some(to.clone()));
+			Owner::<T>::insert(kitty_id, Some(to.clone()));
 
-		Self::deposit_event(Event::KittyTransfered(sender, to, kitty_id));
-		Ok(())
-	}
+ 			Self::deposit_event(Event::KittyTransfered(sender, to, kitty_id));
+			Ok(())
+		}
+
+		/// 生产 Kitty
+		/// 父母的编号不能相同
+		/// ### Arguments
+		/// * `origin` - 生产者
+		/// * `kitty_id_1` - 父亲的编号
+		/// * `kitty_id_2` - 母亲的编号
+		#[pallet::weight(0)]
+		pub fn breed(
+			origin: OriginFor<T>,
+			kitty_id_1: KittyIndex,
+			kitty_id_2: KittyIndex,
+		) -> DispatchResult {
+			let who = ensure_signed(origin)?;
+
+			ensure!(kitty_id_1 != kitty_id_2, Error::<T>::SameParentIndex);
+
+			let owner1 = Self::owner(kitty_id_1).ok_or(Error::<T>::InvalidKittyIndex)?;
+			let owner2 = Self::owner(kitty_id_2).ok_or(Error::<T>::InvalidKittyIndex)?;
+
+			ensure!(owner1 == who, Error::<T>::NotOwnerOfKitty);
+			ensure!(owner2 == who, Error::<T>::NotOwnerOfKitty);
+
+			let kitty1 = Self::kitties(kitty_id_1).ok_or(Error::<T>::InvalidKittyIndex)?;
+			let kitty2 = Self::kitties(kitty_id_2).ok_or(Error::<T>::InvalidKittyIndex)?;
+
+			let kitty_id = match Self::kitties_count() {
+				Some(id) => {
+					ensure!(id != KittyIndex::max_value(), Error::<T>::KittiesCountOverflow);
+					id
+				}
+				None => 1
+			};
+
+			let dna_1 = kitty1.0;
+			let dna_2 = kitty2.0;
+
+			let selector = Self::random_value(&who);
+			let mut new_dna = [0u8; 16];
+
+			// 按照父母生成新的DNA
+			for i in 0..dna_1.len() {
+				new_dna[i] = (selector[i] & dna_1[i]) | (!selector[i] & dna_2[i])
+			}
+
+			// 把这些数据都放到链上
+			Kitties::<T>::insert(kitty_id, Some(Kitty(new_dna)));
+			Owner::<T>::insert(kitty_id, Some(&who));
+			KittiesCount::<T>::put(kitty_id);
+
+			Self::deposit_event(Event::KittyCreated(who, kitty_id));
+
+			Ok(())
+		}
     }
 
     impl<T: Config> Pallet<T> {
-	/// 随机数生成
-	/// ### Arguments
-	/// * `who` - 生成随机数的人
-	fn random_value(who: &T::AccountId) -> [u8; 16] {
-		let payload =
-			(T::Randomness::random_seed(), &who, <frame_system::Pallet<T>>::extrinsic_index()); //extrinsic_index()是这笔交易在这个block中的index
-		payload.using_encoded(blake2_128) //用上述三个值可以通过blake2_128最终产生一个128位数
-	}
+		/// 随机数生成
+		/// ### Arguments
+		/// * `who` - 生成随机数的人
+		fn random_value(who: &T::AccountId) -> [u8; 16] {
+			let payload =
+				(T::Randomness::random_seed(), &who, <frame_system::Pallet<T>>::extrinsic_index()); //extrinsic_index()是这笔交易在这个block中的index
+			payload.using_encoded(blake2_128) //用上述三个值可以通过blake2_128最终产生一个128位数
+		}
     }
 }
-	
 ```
