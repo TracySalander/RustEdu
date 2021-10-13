@@ -96,5 +96,77 @@ Simplified reasons for withdrawing balance.
 
 1.增加买和卖得extrinsic
 2.KittyIndex不在pallet中指定，而是在runtime里面绑定
+impl pallet_kitties::Config for Runtime {
+	type Event = Event;
+	type Randomness = RandomnessCollectiveFlip;
+	type KittyIndex = u32;
+}
 3.测试代码能测试所有的五个方法，能检查所有定义的event，能测试出所有定义的错误类型
 4.在创建时质押一定的token，在购买时候支付token
+```rust
+	/// 出售 Kitty
+		/// price 为 None 时, 表示取消出售
+		/// ### Arguments
+		/// * `origin` - 出售者
+		/// * `kitty_id` - 出售的 Kitty 编号
+		/// * `price` - 出售价格
+		#[pallet::weight(0)]
+		pub fn sell(
+			origin: OriginFor<T>,
+			kitty_id: T::KittyIndex,
+			price: Option<BalanceOf<T>>,
+		) -> DispatchResult {
+			let who = ensure_signed(origin)?;
+			ensure!(Some(who.clone()) == Self::owner(kitty_id), Error::<T>::NotOwnerOfKitty);
+
+			KittiesPrice::<T>::mutate_exists(kitty_id, |p| *p = Some(price));
+
+			match price {
+				Some(_) => {
+					Self::deposit_event(Event::KittyForSale(who, kitty_id, price));
+				}
+				None => {
+					Self::deposit_event(Event::KittyCancelSale(who, kitty_id));
+				}
+			}
+
+			Ok(())
+		}
+
+		/// 购买 Kitty
+		/// ### Arguments
+		/// * `origin` - 购买者
+		/// * `kitty_id` - 购买的 Kitty 编号
+		#[pallet::weight(0)]
+		pub fn buy(origin: OriginFor<T>, kitty_id: T::KittyIndex) -> DispatchResult {
+			let buyer = ensure_signed(origin)?;
+
+			let owner = Self::owner(kitty_id).unwrap();
+			ensure!(owner != buyer.clone(), Error::<T>::KittyAlreadyOwned);
+
+			let price = Self::kitties_price(kitty_id).ok_or(Error::<T>::NotForSale)?;
+
+			let reserve = T::ReserveOfNewCreate::get();
+
+			// 扣除质押金额
+			T::Currency::reserve(&buyer, reserve).map_err(|_| Error::<T>::NotEnoughBalance)?;
+
+			// 出售方解除质押
+			T::Currency::unreserve(&owner, reserve);
+
+			// 转账
+			T::Currency::transfer(
+				&buyer,
+				&owner,
+				price,
+				frame_support::traits::ExistenceRequirement::KeepAlive,
+			)?;
+
+			// 出售下架
+			KittiesPrice::<T>::remove(kitty_id);
+
+			Self::transfer_kitty(owner, buyer, kitty_id);
+
+			Ok(())
+		}
+```
