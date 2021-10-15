@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -92,3 +93,74 @@
     <body>
     </body>
 </html>
+```
+## =>箭头函数
+const materials = [
+  'Hydrogen',
+  'Helium',
+  'Lithium',
+  'Beryllium'
+];
+
+console.log(materials.map(material => material.length));
+// expected output: Array [8, 6, 7, 9]
+
+基础语法
+(param1, param2, …, paramN) => { statements }
+(param1, param2, …, paramN) => expression
+//相当于：(param1, param2, …, paramN) =>{ return expression; }
+
+// 当只有一个参数时，圆括号是可选的：
+(singleParam) => { statements }
+singleParam => { statements }
+
+// 没有参数的函数应该写成一对圆括号。
+
+高级语法
+//加括号的函数体返回对象字面量表达式：
+params => ({foo: bar})
+
+//支持剩余参数和默认参数
+(param1, param2, ...rest) => { statements }
+(param1 = defaultValue1, param2, …, paramN = defaultValueN) => {
+statements }
+
+//同样支持参数列表解构
+let f = ([a, b] = [1, 2], {x: c} = {x: a + b}) => a + b + c;
+f();  // 6
+Copy to Clipboard
+() => { statements }
+
+## 扩展运算符
+三个点（...）真名叫扩展运算符
+说白了就是把衣服脱了，不管是大括号（[]）、花括号（{}），统统不在话下，全部脱掉脱掉！
+// 数组
+var number = [1,2,3,4,5,6]
+console.log(...number) //1 2 3 4 5 6
+//对象
+var man = {name:'chuichui',height:176}
+console.log({...man}) / {name:'chuichui',height:176}
+
+## async和await
+```javascript
+function edition(num){
+                return new Promise((resolve, reject)=>{
+                    setTimeout(() => {
+                        resolve(2*num)
+                    }, 2000)
+                })
+            }
+            async function attract(){
+                console.log(1);
+                let result1 = await edition(10);
+                return result1;
+            }
+            attract().then((res)=>{
+                console.log(res);
+            }, (res)=>{
+                console.log("运行错误：" + res);
+            })
+```
+程序第一肯定会输出1，然后进入attract函数内部，接着输出2，然后看见了await，等待edition函数的返回值，此时在attract函数中的代码是被阻塞的，但是外部不会被阻塞，所以就接着输出3。
+
+然后两秒后，输出edition函数返回的4，最后回到attract函数then方法的第一个回调函数，输出了5。
