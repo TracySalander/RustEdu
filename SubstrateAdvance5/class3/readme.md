@@ -1,1 +1,1 @@
-advance-5课程git中缺少kittAvatar资源
+前端截图时没找到kittyAvatar资源，目前前端已有资源，可以正常显示kitty
