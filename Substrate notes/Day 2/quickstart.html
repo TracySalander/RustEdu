@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quick start</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 60px;
+        }
+        
+        .container {
+            width: auto;
+            max-width: 680px;
+            padding: 20px 15px;
+        }
+        
+        .output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <main role="main" class="container">
+        <h1 style="font-family: sans-serif; font-weight: 500;">Display an account balance</h1>
+        <p style="font-family: sans-serif;">Enter a development account address, then click <b>Get Balance</b>.</p>
+        <input type="text" size="58" id="account_address" />
+        <input type="button" onclick="GetBalance()" value="Get Balance">
+        <p class="output">Free Balance: <span id="polkadot-balance"></span></p>
+        <p class="output">Reserved Balance: <span id="reserved-balance"></span></p>
+        <p class="output">Nonce: <span id="nonce-number"></span></p>
+        <p class="output">Timestamp: <span id="timestamp-number"></span></p>
+
+        <h1 style="font-family: sans-serif; font-weight: 500;">Display the chain info</h1>
+        <input type="button" onclick="GetChainInfo()" value="Get Chain Info">
+        <p class="output">The genesisHash of the connected chain: <span id="genesis-hash"></span></p>
+
+        <h1 style="font-family: sans-serif; font-weight: 500;">Display the runtime constants</h1>
+        <input type="button" onclick="GetRuntimeConstants()" value="Get Runtime Constants">
+        <p class="output">The amount required to create a new account: <span id="new-account-required-amount"></span></p>
+
+        <h1 style="font-family: sans-serif; font-weight: 500;">Display the RPC queries</h1>
+        <input type="button" onclick="GetRPCQueries()" value="Get RPC Queries">
+        <p class="output">Retrieve the chain name: <span id="chain-name"></span></p>
+
+        <h1 style="font-family: sans-serif; font-weight: 500;">Display two accounts' balances</h1>
+        <p style="font-family: sans-serif;">Enter the first development account address</p>
+        <input type="text" size="58" id="account_address_1" />
+        <p></p>
+        <p style="font-family: sans-serif;">Enter the second development account address</p>
+        <input type="text" size="58" id="account_address_2" />
+        <p></p>
+        <input type="button" onclick="GetBalances()" value="Get Balances">
+        <p class="output">1st Account Free Balance: <span id="polkadot-balance-1"></span></p>
+        <p class="output">2nd Account Free Balance: <span id="polkadot-balance-2"></span></p>
+    </main>
+
+    <script src="https://unpkg.com/@polkadot/util/bundle-polkadot-util.js"></script>
+    <script src="https://unpkg.com/@polkadot/util-crypto/bundle-polkadot-util-crypto.js"></script>
+    <script src="https://unpkg.com/@polkadot/types/bundle-polkadot-types.js"></script>
+    <script src="https://unpkg.com/@polkadot/api/bundle-polkadot-api.js"></script>
+    <!-- script tag let you define client side by using Javascript-->
+    <script>
+        async function GetBalance() {
+            //const ADDR = '5Gb6Zfe8K8NSKrkFLCgqs8LUdk7wKweXM5pN296jVqDpdziR';
+            //Alice: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
+            //Bob: 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty
+            const {
+                WsProvider,
+                ApiPromise
+            } = polkadotApi;
+            // Construct
+            // At this time the only provider type that is fully supported by the API is WebSocket version.
+            const wsProvider = new WsProvider('ws://127.0.0.1:9944');
+            const polkadot = await ApiPromise.create({
+                provider: wsProvider
+            });
+
+            let polkadotBalance = document.getElementById("polkadot-balance");
+            const x = document.getElementById("account_address").value;
+            const {
+                nonce,
+                data: balance
+            } = await polkadot.query.system.account(x);
+
+            polkadotBalance.innerText = balance.free;
+
+            let reservedBalance = document.getElementById("reserved-balance");
+            reservedBalance.innerText = balance.reserved;
+
+            let nonceNumber = document.getElementById("nonce-number");
+            nonceNumber.innerText = nonce;
+
+            let timestampNumber = document.getElementById("timestamp-number");
+            timestampNumber.innerText = await polkadot.query.timestamp.now();
+        }
+
+        async function GetChainInfo() {
+            const {
+                WsProvider,
+                ApiPromise
+            } = polkadotApi;
+            const wsProvider = new WsProvider('ws://127.0.0.1:9944');
+            const polkadot = await ApiPromise.create({
+                provider: wsProvider
+            });
+
+            let genesisHash = document.getElementById("genesis-hash");
+            genesisHash.innerText = await polkadot.genesisHash.toHex();
+        }
+
+        async function GetRuntimeConstants() {
+            const {
+                WsProvider,
+                ApiPromise
+            } = polkadotApi;
+            const wsProvider = new WsProvider('ws://127.0.0.1:9944');
+            const polkadot = await ApiPromise.create({
+                provider: wsProvider
+            });
+
+            // The length of an epoch (session) in Babe
+            // The amount required to create a new account
+            let newAccountRequiredBalance = document.getElementById("new-account-required-amount");
+            newAccountRequiredBalance.innerText = await polkadot.consts.balances.existentialDeposit.toNumber();
+        }
+
+        async function GetRPCQueries() {
+            const {
+                WsProvider,
+                ApiPromise
+            } = polkadotApi;
+            const wsProvider = new WsProvider('ws://127.0.0.1:9944');
+            const polkadot = await ApiPromise.create({
+                provider: wsProvider
+            });
+
+            // Retrieve the chain name
+            let chainName = document.getElementById("chain-name");
+            chainName.innerText = await polkadot.rpc.system.chain();
+        }
+
+        async function GetBalances() {
+            const {
+                WsProvider,
+                ApiPromise
+            } = polkadotApi;
+            const wsProvider = new WsProvider('ws://127.0.0.1:9944');
+            const polkadot = await ApiPromise.create({
+                provider: wsProvider
+            });
+
+            let polkadotBalance1 = document.getElementById("polkadot-balance-1");
+            const x = document.getElementById("account_address_1").value;
+            let polkadotBalance2 = document.getElementById("polkadot-balance-2");
+            const y = document.getElementById("account_address_2").value;
+
+            const unsub = await polkadot.query.system.account.multi([x, y], (balances) => {
+                const [{
+                    data: balance1
+                }, {
+                    data: balance2
+                }] = balances;
+                polkadotBalance1.innerText = balance1.free;
+                polkadotBalance2.innerText = balance2.free;
+            });
+
+        }
+    </script>
+</body>
+
+</html>
