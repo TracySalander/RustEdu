@@ -38,3 +38,6 @@ Desgin considerations:
 
 - The database is intended to be used for efficiently storing blockchain state encoded into the Patricia-Merkle trie. Which means most of the keys are fixed size and uniformly distributed. Most values are small. Values over 16 kbytes are rare. Trie nodes may be shared by multiple tries and/or branches, therefore reference counting is required.
 - Read performance is more important than write performance for blockchain transaction throughput. Writes are typically performed in large batches, when the new block is imported. There's usually some time between subsequent writes when the blockchain client is idle or executes the block.
+
+#### Runtime interface
+The outer node is responsible for handling peer discovery, transaction pooling, block and transaction gossiping, consensus, and answering RPC calls from the outside world. These tasks frequently require the outer node to query the runtime for information or to provide information to the runtime. In Substrate, the `sp_api` crate provides an interface to implement a runtime API. It is designed to give you flexibility in defining your own custom interfaces using the `impl_runtime_apis` macro. However, evry runtime must implement the `Core` and `Metadata` interface.
