@@ -14,7 +14,7 @@ A block consists of a header and an array of transactions. The header contains t
 - State root 
 - Digest
 
-`
+```
 pub struct Header<Number: Copy + Into<U256> + TryFrom<U256>, Hash: HashT> {
     /// The parent hash.
     pub parent_hash: Hash::Output,
@@ -30,4 +30,4 @@ pub struct Header<Number: Copy + Into<U256> + TryFrom<U256>, Hash: HashT> {
     /// A chain-specific digest of data useful for light clients or referencing auxiliary data. It is a set of additonal data, each chain is different. Usually put consensus relating info. 
     pub digest: Digest<Hash::Output>,
 }
-`
+```
