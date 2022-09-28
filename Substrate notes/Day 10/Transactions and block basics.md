@@ -27,7 +27,7 @@ pub struct Header<Number: Copy + Into<U256> + TryFrom<U256>, Hash: HashT> {
     pub state_root: Hash::Output,
     /// The merkle root of the extrinsics. (Transaction root) A abstract of a senquence of transactions.
     pub extrinsics_root: Hash::Output,
-    /// A chain-specific digest of data useful for light clients or referencing auxiliary data. It is a set of additonal data, each chain is different. Usually put consensus relating info. 
+    /// A chain-specific digest of data useful for light clients or referencing auxiliary data. It is a set of additional data, each chain is different. Usually put consensus relating info. 
     pub digest: Digest<Hash::Output>,
 }
 ```
