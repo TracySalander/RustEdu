@@ -8,8 +8,6 @@ You can look up the chain-specific address for a public key using Subscan https:
 
 Substrate supports some specialized accounts to control how specific key pairs can be used. For example, you might have accounts that require custom cryptographic schemes, can only be used to perform specific functions, or can only access specific pallets.
 
-**Staking accounts and keys**
-
 **Stash account:** (stake balance)
 
 The stash account represents the public/private key pair that defines a staking balance for validators.
